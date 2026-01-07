@@ -41,3 +41,42 @@ source venv/bin/activate  # Linux / macOS
 venv\Scripts\activate     # Windows
 
 pip install -r requirements.txt
+
+### Step 5: Model Architecture
+
+- Input layer:
+  - **Linear layer** (when using one-hot word representations)
+  - **Embedding layer** (when using word indices)
+- Linear hidden layer
+- Output layer predicting context word probabilities
+
+The network weights are initialized using **small Gaussian noise (values < 0.1)**.  
+A **large learning rate** is used to place the model in the *feature learning regime*, which is desirable when learning word embeddings.
+
+📄 `src/model.py`
+
+---
+
+### Step 6: Training
+
+- Loss function: **Cross-Entropy Loss**
+- Optimizer: **Stochastic Gradient Descent (SGD)**
+- The model is trained on **skip-gram word–context pairs**
+- Each context word is treated as an independent training target
+
+📄 `src/train.py`
+
+---
+
+### Step 7: Inference
+
+An inference function is implemented that:
+
+- Accepts a **one-hot encoded word vector**
+- Passes it through the trained network
+- Outputs the corresponding **learned word embedding**
+
+This function allows direct inspection and analysis of the embedding space.
+
+📄 `src/inference.py`
+
