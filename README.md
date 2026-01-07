@@ -32,7 +32,7 @@ Only a subset of the data is used to keep training efficient and interpretable.
 
 ### 1. Clone the repository
 
-```bash
+
 git clone https://github.com/mlungisimajola323/Word2Vec-Skipgram.git
 cd Word2Vec-Skipgram
 
