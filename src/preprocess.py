@@ -1,16 +1,7 @@
 import string
 
 def load_text(file_path, max_words=None):
-    """
-    Reads text from a file and returns a cleaned list of words.
     
-    Args:
-        file_path (str): Path to the text file
-        max_words (int, optional): Limit number of words for faster experiments
-    
-    Returns:
-        List[str]: List of cleaned words
-    """
     with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
         text = f.read()
 
@@ -28,3 +19,16 @@ def load_text(file_path, max_words=None):
         words = words[:max_words]
 
     return words
+
+def build_vocab(words):
+    
+    word_to_idx = {}
+    idx_to_word = {}
+
+    for word in words:
+        if word not in word_to_idx:
+            idx = len(word_to_idx)
+            word_to_idx[word] = idx
+            idx_to_word[idx] = word
+
+    return word_to_idx, idx_to_word
