@@ -8,7 +8,7 @@ from dataset import SkipGramDataset
 from model import SkipGramModel
 
 
-def train():
+def train(remove_stopwords=False):
     # -----------------------------
     # Hyperparameters
     # -----------------------------
@@ -21,11 +21,17 @@ def train():
     # -----------------------------
     # Load and preprocess data
     # -----------------------------
-    words = load_text("data/HP1.txt", max_words=50000)
+    words = load_text(
+        "data/HP1.txt",
+        max_words=50000,
+        remove_stopwords=remove_stopwords
+    )
+
     word_to_idx, idx_to_word = build_vocab(words)
 
     vocab_size = len(word_to_idx)
     print(f"Vocabulary size: {vocab_size}")
+    print(f"Stop words removed: {remove_stopwords}")
 
     dataset = SkipGramDataset(words, word_to_idx, window_size=WINDOW_SIZE)
     dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
@@ -42,7 +48,7 @@ def train():
     # Training loop
     # -----------------------------
     for epoch in range(EPOCHS):
-        total_loss = 0
+        total_loss = 0.0
 
         for center, context in dataloader:
             optimizer.zero_grad()
@@ -58,10 +64,21 @@ def train():
         avg_loss = total_loss / len(dataloader)
         print(f"Epoch {epoch + 1}/{EPOCHS}, Loss: {avg_loss:.4f}")
 
+    # -----------------------------
     # Save embeddings
-    torch.save(model.embedding.weight.data, "embeddings.pt")
-    print("Training complete. Embeddings saved.")
+    # -----------------------------
+    filename = (
+        "embeddings_no_stopwords.pt"
+        if remove_stopwords
+        else "embeddings_with_stopwords.pt"
+    )
+
+    torch.save(model.embedding.weight.data, filename)
+    print(f"Training complete. Embeddings saved to {filename}")
 
 
 if __name__ == "__main__":
-    train()
+    # Train BOTH versions for comparison
+    train(remove_stopwords=False)
+    print("\n" + "=" * 50 + "\n")
+    train(remove_stopwords=True)
